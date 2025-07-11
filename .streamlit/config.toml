@@ -1,7 +1,5 @@
 [theme]
-base="dark"  # "light" or "dark" or "system"
+base="light"
 primaryColor="#ff9933"
-backgroundColor="#101820"
-secondaryBackgroundColor="#292929"
-textColor="#f8f8f8"
-font="sans serif"
+secondaryBackgroundColor="#0166ff"
+textColor="#020000"
