@@ -8,11 +8,14 @@ def get_conn():
 
 def save_sheet_to_db(sheet_name, df):
     conn = get_conn()
-    # Remove Unnamed columns (robust)
+    # Remove all unnamed columns
     df = df.loc[:, [col for col in df.columns if not str(col).lower().startswith("unnamed")]]
+    # Skip saving if DataFrame is empty or has no columns
+    if df.empty or len(df.columns) == 0:
+        conn.close()
+        return
     df.to_sql(sheet_name, conn, if_exists='replace', index=False)
     conn.close()
-
 
 def load_sheet_from_db(sheet_name):
     conn = get_conn()
@@ -38,19 +41,6 @@ def add_row(sheet_name, row_dict):
     conn.execute(f'INSERT INTO "{sheet_name}" ({columns}) VALUES ({placeholders})', values)
     conn.commit()
     conn.close()
-
-
-def save_sheet_to_db(sheet_name, df):
-    conn = get_conn()
-    # Remove all unnamed columns
-    df = df.loc[:, [col for col in df.columns if not str(col).lower().startswith("unnamed")]]
-    # Skip saving if DataFrame is empty or has no columns
-    if df.empty or len(df.columns) == 0:
-        conn.close()
-        return
-    df.to_sql(sheet_name, conn, if_exists='replace', index=False)
-    conn.close()
-
 
 def update_row(sheet_name, row_id, id_col, row_dict):
     conn = get_conn()
